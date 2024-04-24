@@ -1,15 +1,14 @@
+import it.epicode.classes.Customer;
+import it.epicode.classes.Order;
 import it.epicode.classes.Product;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
 
@@ -24,7 +23,7 @@ public class Main {
         products.add(new Product(6, "Book2", "Books", 100.8));
         products.add(new Product(7, "Book3", "Books", 124.32));
         products.add(new Product(8, "Boys3", "Boys", 150.89));
-        products.add(new Product(9, "Book4", "Books", 94.96));
+        products.add(new Product(9, "Book3", "Books", 94.96));
         products.add(new Product(10, "Baby3", "Baby", 92.10));
 
         // Esercizio 1
@@ -76,6 +75,49 @@ public class Main {
 
         LocalDate startDate = LocalDate.of(2021, 2,1);
         LocalDate endDate = LocalDate.of(2021, 4, 1);
+
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(1, "delivered", LocalDate.of(2021, 3, 31),
+                LocalDate.of(2021, 4, 5),
+                List.of(
+                        new Product(1, "Book1", "Books", 34.6),
+                        new Product(6, "Book2", "Books", 100.8),
+                        new Product(9, "Book3", "Books", 94.96)
+                ),
+                new Customer(1, "Alice", 2)));
+        orders.add(new Order(2, "ordered", LocalDate.of(2021, 2, 11),
+                LocalDate.of(2021, 2, 15),
+                List.of(
+                        new Product(1, "Book1", "Books", 34.6),
+                        new Product(6, "Book2", "Books", 100.8),
+                        new Product(9, "Book3", "Books", 94.96)
+                ),
+                new Customer(2, "Edoardo", 2)));
+        orders.add(new Order(1, "delivered", LocalDate.of(2021, 3, 1),
+                LocalDate.of(2021, 3, 15),
+                List.of(
+                        new Product(1, "Book1", "Books", 34.6),
+                        new Product(6, "Book2", "Books", 100.8),
+                        new Product(9, "Book3", "Books", 94.96)
+                ),
+                new Customer(3, "Simona", 3)));
+        orders.add(new Order(1, "delivered", LocalDate.of(2021, 3, 21),
+                LocalDate.of(2021, 4, 1),
+                List.of(
+                        new Product(1, "Book1", "Books", 34.6),
+                        new Product(6, "Book2", "Books", 100.8),
+                        new Product(9, "Book3", "Books", 94.96)
+                ),
+                new Customer(4, "Nicola", 2)));
+
+        List<Product> products2 = orders.stream()
+                .filter(order -> order.getOrderDate().isAfter(startDate) && order.getOrderDate().isBefore(endDate))
+                .filter(order -> order.getCustomer() != null && order.getCustomer().getTier() != null && order.getCustomer().getTier() == 2)
+                .flatMap(order -> order.getProducts().stream())
+                .toList();
+
+        products2.forEach(System.out::println);
+
 
     }
 
